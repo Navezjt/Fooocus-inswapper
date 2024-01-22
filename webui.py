@@ -215,7 +215,13 @@ with shared.gradio_root:
                                 inswapper_enabled = gr.Checkbox(label="Enabled", value=False)
                                 inswapper_target_image_index = gr.Number(label = "Target Image Index", info="-1 will swap all faces, otherwise provide the 0-based index of the face (0, 1, etc)")
                             with gr.Column():
-                                inswapper_source_image = grh.Image(label='Source Face Image', source='upload', type='numpy')                                
+                                inswapper_source_image = grh.Image(label='Source Face Image', source='upload', type='numpy')
+                    with gr.TabItem(label="PhotoMaker") as photomaker_tab:
+                        with gr.Row():
+                            with gr.Column():
+                                photomaker_enabled = gr.Checkbox(label="Enabled", value=False)
+                            with gr.Column():
+                                photomaker_source_image = grh.Image(label='Source Face Image', source='upload', type='numpy')
 
             switch_js = "(x) => {if(x){viewer_to_bottom(100);viewer_to_bottom(500);}else{viewer_to_top();} return x;}"
             down_js = "() => {viewer_to_bottom();}"
@@ -230,6 +236,7 @@ with shared.gradio_root:
             ip_tab.select(lambda: 'ip', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
             desc_tab.select(lambda: 'desc', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
             inswapper_tab.select(lambda: 'inswapper', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
+            photomaker_tab.select(lambda: 'photomaker', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
 
         with gr.Column(scale=1, visible=modules.config.default_advanced_checkbox) as advanced_column:
             with gr.Tab(label='Setting'):
@@ -540,6 +547,7 @@ with shared.gradio_root:
         ctrls += [outpaint_selections, inpaint_input_image, inpaint_additional_prompt, inpaint_mask_image]
         ctrls += ip_ctrls
         ctrls += [inswapper_enabled, inswapper_source_image, inswapper_target_image_index]
+        ctrls += [photomaker_tab, photomaker_enabled, photomaker_source_image]
 
         print(f"Controls: {ctrls}")
 

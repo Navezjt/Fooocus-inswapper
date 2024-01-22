@@ -29,3 +29,12 @@ tb-nightly
 yapf
 lpips
 insightface>=0.7.3
+
+torch==2.0.1
+torchvision==0.15.2
+diffusers==0.25.0
+huggingface-hub==0.20.2
+spaces==0.19.4
+safetensors
+omegaconf
+peft

@@ -44,6 +44,8 @@ def worker():
     from modules.upscaler import perform_upscale
 
     from modules.face_swap import perform_face_swap
+    from modules.pm import generate_photomaker
+
 
     try:
         async_gradio_app = shared.gradio_root
@@ -154,9 +156,14 @@ def worker():
 
         inswapper_enabled = args.pop()
         inswapper_source_image = args.pop()
-        inswapper_target_image_index = args.pop()
+        inswapper_target_image_index = args.pop()        
 
         print(f"Inswapper enabled: {inswapper_enabled}")
+
+        photomaker_enabled = args.pop()
+        photomaker_source_image = args.pop()
+
+        print(f"PhotoMaker enabled: {photomaker_enabled}")
 
         outpaint_selections = [o.lower() for o in outpaint_selections]
         base_model_additional_loras = []
@@ -251,7 +258,7 @@ def worker():
         scheduler_name = advanced_parameters.scheduler_name
 
         goals = []
-        tasks = []
+        tasks = []        
 
         if input_image_checkbox:
             if (current_tab == 'uov' or (
@@ -759,23 +766,27 @@ def worker():
                                 positive_cond, negative_cond,
                                 pipeline.loaded_ControlNets[cn_path], cn_img, cn_weight, 0, cn_stop)
 
-                imgs = pipeline.process_diffusion(
-                    positive_cond=positive_cond,
-                    negative_cond=negative_cond,
-                    steps=steps,
-                    switch=switch,
-                    width=width,
-                    height=height,
-                    image_seed=task['task_seed'],
-                    callback=callback,
-                    sampler_name=final_sampler_name,
-                    scheduler_name=final_scheduler_name,
-                    latent=initial_latent,
-                    denoise=denoising_strength,
-                    tiled=tiled,
-                    cfg_scale=cfg_scale,
-                    refiner_swap_method=refiner_swap_method
-                )
+                if (current_tab == 'photomaker'):
+                    imgs = generate_photomaker(positive_cond, [photomaker_source_image], negative_cond)
+
+                else:
+                    imgs = pipeline.process_diffusion(
+                        positive_cond=positive_cond,
+                        negative_cond=negative_cond,
+                        steps=steps,
+                        switch=switch,
+                        width=width,
+                        height=height,
+                        image_seed=task['task_seed'],
+                        callback=callback,
+                        sampler_name=final_sampler_name,
+                        scheduler_name=final_scheduler_name,
+                        latent=initial_latent,
+                        denoise=denoising_strength,
+                        tiled=tiled,
+                        cfg_scale=cfg_scale,
+                        refiner_swap_method=refiner_swap_method
+                    )
 
                 del task['c'], task['uc'], positive_cond, negative_cond  # Save memory
 
