@@ -770,7 +770,7 @@ def worker():
                     print("Doing the PhotoMaker...")
                     print(type(photomaker_source_image))
                     print(f"Positive prompt: {prompt}")
-                    imgs = generate_photomaker(prompt, [photomaker_source_image], negative_prompt, steps, task['task_seed'], photomaker_style)
+                    imgs = generate_photomaker(prompt, [photomaker_source_image], negative_prompt, steps, task['task_seed'])
 
                 else:
                     imgs = pipeline.process_diffusion(
