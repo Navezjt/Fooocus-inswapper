@@ -219,7 +219,7 @@ with shared.gradio_root:
                     with gr.TabItem(label="PhotoMaker") as photomaker_tab:
                         with gr.Row():
                             with gr.Column():
-                                photomaker_enabled = gr.Checkbox(label="Enabled", value=False)
+                                photomaker_enabled = gr.Checkbox(label="Enabled", value=False)                                
                             with gr.Column():
                                 photomaker_source_image = grh.Image(label='Source Face Image', source='upload', type='numpy')
 
@@ -547,7 +547,7 @@ with shared.gradio_root:
         ctrls += [outpaint_selections, inpaint_input_image, inpaint_additional_prompt, inpaint_mask_image]
         ctrls += ip_ctrls
         ctrls += [inswapper_enabled, inswapper_source_image, inswapper_target_image_index]
-        ctrls += [photomaker_tab, photomaker_enabled, photomaker_source_image]
+        ctrls += [photomaker_enabled, photomaker_source_image]
 
         print(f"Controls: {ctrls}")
 

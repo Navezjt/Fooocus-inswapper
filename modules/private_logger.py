@@ -24,7 +24,10 @@ def log(img, dic):
 
     date_string, local_temp_filename, only_name = generate_temp_filename(folder=modules.config.path_outputs, extension='png')
     os.makedirs(os.path.dirname(local_temp_filename), exist_ok=True)
-    Image.fromarray(img).save(local_temp_filename)
+    if isinstance (img, Image.Image):
+        img.save(local_temp_filename)
+    else:
+        Image.fromarray(img).save(local_temp_filename)
     html_name = os.path.join(os.path.dirname(local_temp_filename), 'log.html')
 
     css_styles = (
