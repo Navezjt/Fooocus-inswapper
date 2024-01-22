@@ -219,9 +219,16 @@ with shared.gradio_root:
                     with gr.TabItem(label="PhotoMaker") as photomaker_tab:
                         with gr.Row():
                             with gr.Column():
-                                photomaker_enabled = gr.Checkbox(label="Enabled", value=False)                                
-                            with gr.Column():
-                                photomaker_source_image = grh.Image(label='Source Face Image', source='upload', type='numpy')
+                                photomaker_enabled = gr.Checkbox(label="Enabled", value=False)                                                            
+                        with gr.Row():
+                            with gr.Column():                            
+                                photomaker_source_image_1 = grh.Image(label='Source Face Image', source='upload', type='numpy')
+                            with gr.Column():                                                                
+                                photomaker_source_image_2 = grh.Image(label='Source Face Image', source='upload', type='numpy')
+                            with gr.Column():                                
+                                photomaker_source_image_3 = grh.Image(label='Source Face Image', source='upload', type='numpy')
+                            with gr.Column():                                
+                                photomaker_source_image_4 = grh.Image(label='Source Face Image', source='upload', type='numpy')
 
             switch_js = "(x) => {if(x){viewer_to_bottom(100);viewer_to_bottom(500);}else{viewer_to_top();} return x;}"
             down_js = "() => {viewer_to_bottom();}"
@@ -547,7 +554,7 @@ with shared.gradio_root:
         ctrls += [outpaint_selections, inpaint_input_image, inpaint_additional_prompt, inpaint_mask_image]
         ctrls += ip_ctrls
         ctrls += [inswapper_enabled, inswapper_source_image, inswapper_target_image_index]
-        ctrls += [photomaker_enabled, photomaker_source_image]
+        ctrls += [photomaker_enabled, photomaker_source_image_1, photomaker_source_image_2, photomaker_source_image_3, photomaker_source_image_4]
 
         print(f"Controls: {ctrls}")
 

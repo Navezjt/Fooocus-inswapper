@@ -161,7 +161,10 @@ def worker():
         print(f"Inswapper enabled: {inswapper_enabled}")
 
         photomaker_enabled = args.pop()
-        photomaker_source_image = args.pop()        
+        photomaker_source_image_1 = args.pop()
+        photomaker_source_image_2 = args.pop()
+        photomaker_source_image_3 = args.pop()
+        photomaker_source_image_4 = args.pop()
 
         print(f"PhotoMaker enabled: {photomaker_enabled}")
 
@@ -767,10 +770,12 @@ def worker():
                                 pipeline.loaded_ControlNets[cn_path], cn_img, cn_weight, 0, cn_stop)
 
                 if current_tab == 'photomaker' and photomaker_enabled == True:
-                    print("Doing the PhotoMaker...")
-                    print(type(photomaker_source_image))
+                    print("Doing the PhotoMaker...")                    
+                    photomaker_source_images = [photomaker_source_image_1, photomaker_source_image_2, photomaker_source_image_3, photomaker_source_image_4]
+                    photomaker_source_images = [image for image in photomaker_source_images if image is not None]
+                    
                     print(f"Positive prompt: {prompt}")
-                    imgs = generate_photomaker(prompt, [photomaker_source_image], negative_prompt, steps, task['task_seed'])
+                    imgs = generate_photomaker(prompt, photomaker_source_images, negative_prompt, steps, task['task_seed'], width, height)
 
                 else:
                     imgs = pipeline.process_diffusion(

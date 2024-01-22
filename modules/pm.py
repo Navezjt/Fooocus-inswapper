@@ -11,7 +11,7 @@ from huggingface_hub import hf_hub_download
 base_model_path = "E:\\github\\stable-diffusion-webui\\models\\Stable-diffusion\\sdxl\\RealVisXL_V3.0.safetensors"
 photomaker_ckpt = hf_hub_download(repo_id="TencentARC/PhotoMaker", filename="photomaker-v1.bin", repo_type="model")
 
-def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed):
+def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     pipe = PhotoMakerStableDiffusionXLPipeline.from_single_file(
@@ -33,7 +33,7 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed):
 
     # pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
     pipe.scheduler =  DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-    pipe.scheduler.algorithm_type  = 'sde-dpmsolver++'
+    # pipe.scheduler.algorithm_type = 'sde-dpmsolver++'
 
     pipe.fuse_lora()
 
@@ -50,6 +50,8 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed):
         negative_prompt=negative_prompt,
         num_images_per_prompt=1,
         num_inference_steps=steps,
+        width=width,
+        height=height,
         start_merge_step=0,
         generator=generator,
         guidance_scale=4
