@@ -12,7 +12,7 @@ import modules.default_pipeline as pipeline
 base_model_path = pipeline.model_base.filename
 photomaker_ckpt = hf_hub_download(repo_id="TencentARC/PhotoMaker", filename="photomaker-v1.bin", repo_type="model")
 
-def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height):
+def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height, guidance_scale):
     print(f"Using base model: {base_model_path} for PhotoMaker")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -22,6 +22,26 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
         use_safetensors=True,                
         variant="fp16"
     ).to(device)
+
+    def progress(step, timestep, latents):
+        print(step, timestep, latents[0][0][0][0])
+
+        with torch.no_grad():
+
+            latents = 1 / 0.18215 * latents
+            image = pipe.vae.decode(latents).sample
+
+            image = (image / 2 + 0.5).clamp(0, 1)
+
+            # we always cast to float32 as this does not cause significant overhead and is compatible with bfloa16
+            image = image.cpu().permute(0, 2, 3, 1).float().numpy()
+
+            # convert to PIL Images
+            image = pipe.numpy_to_pil(image)
+
+            # do something with the Images
+            for i, img in enumerate(image):
+                img.save(f"step_{step}_img{i}.png")    
 
     pipe.load_photomaker_adapter(
         os.path.dirname(photomaker_ckpt),
@@ -52,7 +72,10 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
         height=height,
         start_merge_step=0,
         generator=generator,
-        guidance_scale=4,
+        guidance_scale=guidance_scale,
+        # callback=progress,
+        # callback_steps=5
     ).images
 
     return images
+
