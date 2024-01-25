@@ -60,13 +60,18 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
 
     loras = [lora for lora in loras if 'None' not in lora]
 
-    for lora in loras:
+    adapters = []
+    for index, lora in enumerate(loras):
         path_separator = os.path.sep
         lora_filename, lora_weight = lora
         lora_fullpath = config.path_loras + path_separator + lora_filename
         print(f"PhotoMaker: Loading {lora_fullpath} with weight {lora_weight}")
-        pipe.load_lora_weights(config.path_loras, weight_name=lora_filename)
-        pipe.fuse_lora(lora_scale=lora_weight)
+        pipe.load_lora_weights(config.path_loras, weight_name=lora_filename, adapter_name=str(index))
+        adapters.append({str(index): lora_weight})
+    
+    adapter_names = [list(adapter.keys())[0] for adapter in adapters]
+    adapter_weights = [list(adapter.values())[0] for adapter in adapters]
+    pipe.set_adapters(adapter_names, adapter_weights=adapter_weights)
 
     pipe.fuse_lora()
 
