@@ -251,7 +251,7 @@ with shared.gradio_root:
             desc_tab.select(lambda: 'desc', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
             inswapper_tab.select(lambda: 'inswapper', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
             photomaker_tab.select(lambda: 'photomaker', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
-            instantid_tab.select(lambda: 'instantid', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
+            # instantid_tab.select(lambda: 'instantid', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
 
         with gr.Column(scale=1, visible=modules.config.default_advanced_checkbox) as advanced_column:
             with gr.Tab(label='Setting'):

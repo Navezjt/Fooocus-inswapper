@@ -8,12 +8,14 @@ from photomaker import PhotoMakerStableDiffusionXLPipeline
 from huggingface_hub import hf_hub_download
 
 import modules.default_pipeline as pipeline
+import modules.config as config
 
 base_model_path = pipeline.model_base.filename
 photomaker_ckpt = hf_hub_download(repo_id="TencentARC/PhotoMaker", filename="photomaker-v1.bin", repo_type="model")
 
-def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height, guidance_scale):
-    print(f"Using base model: {base_model_path} for PhotoMaker")
+def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height, guidance_scale, loras):
+    print(f"PhotoMaker: Using base model: {base_model_path} for PhotoMaker")
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     pipe = PhotoMakerStableDiffusionXLPipeline.from_single_file(
@@ -53,6 +55,18 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
     pipe.id_encoder.to(device)
     
     pipe.scheduler =  DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+
+    print(loras)
+
+    loras = [lora for lora in loras if 'None' not in lora]
+
+    for lora in loras:
+        path_separator = os.path.sep
+        lora_filename, lora_weight = lora
+        lora_fullpath = config.path_loras + path_separator + lora_filename
+        print(f"PhotoMaker: Loading {lora_fullpath} with weight {lora_weight}")
+        pipe.load_lora_weights(config.path_loras, weight_name=lora_filename)
+        pipe.fuse_lora(lora_scale=lora_weight)
 
     pipe.fuse_lora()
 

@@ -158,7 +158,7 @@ def worker():
         inswapper_source_image = args.pop()
         inswapper_target_image_index = args.pop()        
 
-        print(f"Inswapper enabled: {inswapper_enabled}")
+        print(f"Inswapper: {'ENABLED' if inswapper_enabled else 'DISABLED'}")
 
         photomaker_enabled = args.pop()
         photomaker_source_image_1 = args.pop()
@@ -166,7 +166,7 @@ def worker():
         photomaker_source_image_3 = args.pop()
         photomaker_source_image_4 = args.pop()
 
-        print(f"PhotoMaker enabled: {photomaker_enabled}")
+        print(f"PhotoMaker: {'ENABLED' if photomaker_enabled else 'DISABLED'}")
 
         outpaint_selections = [o.lower() for o in outpaint_selections]
         base_model_additional_loras = []
@@ -770,11 +770,11 @@ def worker():
                                 pipeline.loaded_ControlNets[cn_path], cn_img, cn_weight, 0, cn_stop)
 
                 if current_tab == 'photomaker' and photomaker_enabled == True:
-                    print("Doing the PhotoMaker...")                    
+                    print("PhotoMaker: Begin")                    
                     photomaker_source_images = [photomaker_source_image_1, photomaker_source_image_2, photomaker_source_image_3, photomaker_source_image_4]
                     photomaker_source_images = [image for image in photomaker_source_images if image is not None]
 
-                    print(f"Fooocus expansion for PhotoMaker is {'ENABLED' if use_expansion else 'DISABLED'}")
+                    # print(f"Fooocus expansion for PhotoMaker is {'ENABLED' if use_expansion else 'DISABLED'}")
 
                     photomaker_prompt = positive_basic_workloads[0]
                     photomaker_negative_prompt = negative_basic_workloads[0]
@@ -784,10 +784,10 @@ def worker():
                     # if use_expansion:
                     #     photomaker_prompt = photomaker_prompt + ' ' +  expansion.replace(prompt, "")
                     
-                    print(f"PhotoMaker prompt: {photomaker_prompt}")
-                    print(f"PhotoMaker negative prompt: {photomaker_negative_prompt}")
+                    print(f"PhotoMaker: Positive prompt: {photomaker_prompt}")
+                    print(f"PhotoMaker: Negative prompt: {photomaker_negative_prompt}")
 
-                    imgs = generate_photomaker(photomaker_prompt, photomaker_source_images, photomaker_negative_prompt, steps, task['task_seed'], width, height, guidance_scale)
+                    imgs = generate_photomaker(photomaker_prompt, photomaker_source_images, photomaker_negative_prompt, steps, task['task_seed'], width, height, guidance_scale, loras)
 
                 else:
                     imgs = pipeline.process_diffusion(
@@ -841,7 +841,7 @@ def worker():
                     log(x, d)
 
                 if inswapper_enabled and input_image_checkbox:
-                    print("Lets swap some faces!")
+                    print("Inswapper: Begin")
                     imgs = perform_face_swap(imgs, inswapper_source_image, inswapper_target_image_index)
 
                 yield_result(async_task, imgs, do_not_show_finished_images=len(tasks) == 1)
