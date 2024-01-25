@@ -24,7 +24,8 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
         use_safetensors=True,                
         variant="fp16"
     ).to(device)
-
+    
+    # TODO: https://github.com/machineminded/Fooocus-inswapper/issues/4
     def progress(step, timestep, latents):
         print(step, timestep, latents[0][0][0][0])
 
@@ -92,6 +93,7 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
         start_merge_step=10,
         generator=generator,
         guidance_scale=guidance_scale,
+        # TODO https://github.com/machineminded/Fooocus-inswapper/issues/4
         # callback=progress,
         # callback_steps=5
     ).images
