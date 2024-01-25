@@ -228,7 +228,14 @@ with shared.gradio_root:
                             with gr.Column():                                
                                 photomaker_source_image_3 = grh.Image(label='Source Face Image', source='upload', type='numpy')
                             with gr.Column():                                
-                                photomaker_source_image_4 = grh.Image(label='Source Face Image', source='upload', type='numpy')
+                                photomaker_source_image_4 = grh.Image(label='Source Face Image', source='upload', type='numpy')                                
+                    # with gr.TabItem(label="InstantID") as instantid_tab:
+                    #     with gr.Row():
+                    #         with gr.Column():
+                    #             instantid_enabled = gr.Checkbox(label="Enabled", value=False)                                                            
+                    #     with gr.Row():
+                    #         with gr.Column():                            
+                    #             instantid_source_image = grh.Image(label='Source Face Image', source='upload', type='numpy')
 
             switch_js = "(x) => {if(x){viewer_to_bottom(100);viewer_to_bottom(500);}else{viewer_to_top();} return x;}"
             down_js = "() => {viewer_to_bottom();}"
@@ -244,6 +251,7 @@ with shared.gradio_root:
             desc_tab.select(lambda: 'desc', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
             inswapper_tab.select(lambda: 'inswapper', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
             photomaker_tab.select(lambda: 'photomaker', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
+            instantid_tab.select(lambda: 'instantid', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
 
         with gr.Column(scale=1, visible=modules.config.default_advanced_checkbox) as advanced_column:
             with gr.Tab(label='Setting'):

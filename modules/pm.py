@@ -70,7 +70,7 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
         num_inference_steps=steps,
         width=width,
         height=height,
-        start_merge_step=0,
+        start_merge_step=10,
         generator=generator,
         guidance_scale=guidance_scale,
         # callback=progress,

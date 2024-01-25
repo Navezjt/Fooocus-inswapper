@@ -773,9 +773,21 @@ def worker():
                     print("Doing the PhotoMaker...")                    
                     photomaker_source_images = [photomaker_source_image_1, photomaker_source_image_2, photomaker_source_image_3, photomaker_source_image_4]
                     photomaker_source_images = [image for image in photomaker_source_images if image is not None]
+
+                    print(f"Fooocus expansion for PhotoMaker is {'ENABLED' if use_expansion else 'DISABLED'}")
+
+                    photomaker_prompt = positive_basic_workloads[0]
+                    photomaker_negative_prompt = negative_basic_workloads[0]
+
+                    # TODO: figure out 77 token limit
+                    # https://github.com/huggingface/diffusers/issues/2136#issuecomment-1514969011                    
+                    # if use_expansion:
+                    #     photomaker_prompt = photomaker_prompt + ' ' +  expansion.replace(prompt, "")
                     
-                    print(f"Positive prompt: {prompt}")
-                    imgs = generate_photomaker(prompt, photomaker_source_images, negative_prompt, steps, task['task_seed'], width, height, guidance_scale)
+                    print(f"PhotoMaker prompt: {photomaker_prompt}")
+                    print(f"PhotoMaker negative prompt: {photomaker_negative_prompt}")
+
+                    imgs = generate_photomaker(photomaker_prompt, photomaker_source_images, photomaker_negative_prompt, steps, task['task_seed'], width, height, guidance_scale)
 
                 else:
                     imgs = pipeline.process_diffusion(
