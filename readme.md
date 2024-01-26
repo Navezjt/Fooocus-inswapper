@@ -13,7 +13,7 @@ The installation assumes CUDA 11.8.  If you need a different version, please upd
 1. Run `git clone https://github.com/machineminded/Fooocus-inswapper.git`
 2. Execute `configure.bat`
 
-## Usage
+## Inswapper Usage
 
 Inswapper will activate if "Input Image" and "Enabled" are both checked.
 
@@ -22,13 +22,27 @@ Inswapper will activate if "Input Image" and "Enabled" are both checked.
 
 https://github.com/machineminded/Fooocus-inswapper/assets/155763297/68f69e95-8306-4c7b-8f9b-0013352460b6
 
+## PhotoMaker Usage
+
+In this fork, PhotoMaker utilizes `🤗 diffusers`, so it does not utilize a large chunk of Fooocus features (for now).  The following Fooocus configuration items are passed to the PhotoMaker `🤗 diffusers` pipeline:
+
+* Resolution (width and height)
+* Prompt (and generated prompts from selected styles)
+* Negative Prompt (and generated prompts from selected styles)
+* Steps
+* CFG/Guidance Scale
+* Seed
+* LoRAs
+* Sampler (not fully implemented)
+* Scheduler (not fully implemented)
+
 ## Issues
 
 Please report any issues in the Issues tab.  I will try to help as much as I can.
 
 ## To Do
 
-1. 🚀 Allow changing of insightface parameters
-2. 🚀 Allow customizable target image
-3. 🚀 Increase token size to diffusers pipeline to > 77 tokens
+1. 🚀 Allow changing of insightface parameters (Inswapper)
+2. 🚀 Allow customizable target image (Inswapper)
+3. 🚀 Increase token size to PhotoMaker pipeline to > 77 tokens
 4. 🚀 Add progress to PhotoMaker gallery
