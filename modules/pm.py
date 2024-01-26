@@ -9,12 +9,13 @@ from huggingface_hub import hf_hub_download
 
 import modules.default_pipeline as pipeline
 import modules.config as config
+import ldm_patched.modules.samplers as samplers
 
 base_model_path = pipeline.model_base.filename
 photomaker_ckpt = hf_hub_download(repo_id="TencentARC/PhotoMaker", filename="photomaker-v1.bin", repo_type="model")
 
-def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height, guidance_scale, loras):
-    print(f"PhotoMaker: Using base model: {base_model_path} for PhotoMaker")
+def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height, guidance_scale, loras, sampler_name, scheduler_name):
+    print(f"PhotoMaker: Using base model: {base_model_path} for PhotoMaker")    
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -55,9 +56,10 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
 
     pipe.id_encoder.to(device)
     
-    pipe.scheduler =  DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-
-    print(loras)
+    print(f"PhotoMaker: sampler from Fooocus {sampler_name}")    
+    print(f"PhotoMaker: scheduler from Fooocus {scheduler_name}")  
+    sampler_name = get_sampler(sampler_name, scheduler_name)
+    pipe.scheduler = sampler_name.from_config(pipe.scheduler.config)    
 
     loras = [lora for lora in loras if 'None' not in lora]
 
@@ -100,3 +102,14 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
 
     return images
 
+# Map text/key to an actual diffusers sampler/schedule combo
+# https://github.com/huggingface/diffusers/issues/4167
+def get_sampler(sampler_name, scheduler_name):
+    if sampler_name == "euler_ancestral":
+        return EulerDiscreteScheduler()
+    if (sampler_name) == "dpmpp_2m_sde_gpu":
+        if (scheduler_name == "karras"):
+            return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++", use_karras_sigmas=True)
+        return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++")
+    else:
+        return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++")
