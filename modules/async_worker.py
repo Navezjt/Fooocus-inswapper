@@ -769,7 +769,7 @@ def worker():
                                 positive_cond, negative_cond,
                                 pipeline.loaded_ControlNets[cn_path], cn_img, cn_weight, 0, cn_stop)
 
-                if current_tab == 'photomaker' and photomaker_enabled == True:
+                if current_tab == 'photomaker' and photomaker_enabled == True and input_image_checkbox == True:
                     print("PhotoMaker: Begin")                    
                     photomaker_source_images = [photomaker_source_image_1, photomaker_source_image_2, photomaker_source_image_3, photomaker_source_image_4]
                     photomaker_source_images = [image for image in photomaker_source_images if image is not None]
