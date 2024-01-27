@@ -3,7 +3,7 @@ import os
 import sys
 sys.path.append('../photomaker')
 
-from diffusers import EulerDiscreteScheduler,  DPMSolverMultistepScheduler, AutoencoderKL
+from diffusers import EulerDiscreteScheduler,  DPMSolverMultistepScheduler, EulerAncestralDiscreteScheduler
 from photomaker import PhotoMakerStableDiffusionXLPipeline
 from huggingface_hub import hf_hub_download
 
@@ -105,11 +105,13 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
 # Map text/key to an actual diffusers sampler/schedule combo
 # https://github.com/huggingface/diffusers/issues/4167
 def get_sampler(sampler_name, scheduler_name):
-    if sampler_name == "euler_ancestral":
+    if sampler_name == "euler":
         return EulerDiscreteScheduler()
+    if sampler_name == "euler_ancestral":
+        return EulerAncestralDiscreteScheduler()
     if (sampler_name) == "dpmpp_2m_sde_gpu":
         if (scheduler_name == "karras"):
             return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++", use_karras_sigmas=True)
-        return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++")
+        return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++", euler_at_final=True)
     else:
-        return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++")
+        return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++", euler_at_final=True)
