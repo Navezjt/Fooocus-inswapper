@@ -104,6 +104,10 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
 
 # Map text/key to an actual diffusers sampler/schedule combo
 # https://github.com/huggingface/diffusers/issues/4167
+
+# Getting better results with DPMSolverMultistepScheduler
+# https://github.com/huggingface/diffusers/issues/5433
+# https://github.com/huggingface/diffusers/pull/5541
 def get_sampler(sampler_name, scheduler_name):
     if sampler_name == "euler":
         return EulerDiscreteScheduler()
