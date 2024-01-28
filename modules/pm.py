@@ -1,6 +1,7 @@
 import torch
 import os
 import sys
+import modules.gradio_hijack as grh
 sys.path.append('../photomaker')
 
 from diffusers import EulerDiscreteScheduler,  DPMSolverMultistepScheduler, EulerAncestralDiscreteScheduler
@@ -14,7 +15,7 @@ import ldm_patched.modules.samplers as samplers
 base_model_path = pipeline.model_base.filename
 photomaker_ckpt = hf_hub_download(repo_id="TencentARC/PhotoMaker", filename="photomaker-v1.bin", repo_type="model")
 
-def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height, guidance_scale, loras, sampler_name, scheduler_name):
+def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, width, height, guidance_scale, loras, sampler_name, scheduler_name, async_task):
     print(f"PhotoMaker: Using base model: {base_model_path} for PhotoMaker")    
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -26,10 +27,8 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
         variant="fp16"
     ).to(device)
     
-    # TODO: https://github.com/machineminded/Fooocus-inswapper/issues/4
+    # TODO: https://github.com/machineminded/Fooocus-inswapper/issues/4    
     def progress(step, timestep, latents):
-        print(step, timestep, latents[0][0][0][0])
-
         with torch.no_grad():
 
             latents = 1 / 0.18215 * latents
@@ -41,11 +40,12 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
             image = image.cpu().permute(0, 2, 3, 1).float().numpy()
 
             # convert to PIL Images
-            image = pipe.numpy_to_pil(image)
+            image = pipe.numpy_to_pil(image)[0]
 
-            # do something with the Images
-            for i, img in enumerate(image):
-                img.save(f"step_{step}_img{i}.png")    
+            async_task.yields.append(['preview', (
+                            int(15.0 + 85.0 * float(0) / float(steps)),
+                            f'Step {step}/{steps}',
+                            image)])
 
     pipe.load_photomaker_adapter(
         os.path.dirname(photomaker_ckpt),
@@ -96,7 +96,7 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
         generator=generator,
         guidance_scale=guidance_scale,
         # TODO https://github.com/machineminded/Fooocus-inswapper/issues/4
-        # callback=progress,
+        callback=progress,
         # callback_steps=5
     ).images
 
