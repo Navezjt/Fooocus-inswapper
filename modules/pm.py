@@ -4,7 +4,7 @@ import sys
 import modules.gradio_hijack as grh
 sys.path.append('../photomaker')
 
-from diffusers import EulerDiscreteScheduler,  DPMSolverMultistepScheduler, EulerAncestralDiscreteScheduler
+from diffusers import EulerDiscreteScheduler,  DPMSolverMultistepScheduler, EulerAncestralDiscreteScheduler, DDIMScheduler
 from photomaker import PhotoMakerStableDiffusionXLPipeline
 from huggingface_hub import hf_hub_download
 
@@ -118,4 +118,4 @@ def get_sampler(sampler_name, scheduler_name):
             return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++", use_karras_sigmas=True)
         return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++", euler_at_final=True)
     else:
-        return DPMSolverMultistepScheduler(algorithm_type="sde-dpmsolver++", euler_at_final=True)
+        return DDIMScheduler(timestep_spacing=True, rescale_betas_zero_snr=True)
