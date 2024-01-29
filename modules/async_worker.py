@@ -782,6 +782,10 @@ def worker():
                 if inpaint_worker.current_task is not None:
                     imgs = [inpaint_worker.current_task.post_process(x) for x in imgs]
 
+                if inswapper_enabled and input_image_checkbox:
+                    print("Lets swap some faces!")
+                    imgs = perform_face_swap(imgs, inswapper_source_image, inswapper_target_image_index)                    
+
                 for x in imgs:
                     d = [
                         ('Prompt', task['log_positive_prompt']),
@@ -808,10 +812,6 @@ def worker():
                             d.append((f'LoRA {li + 1}', f'{n} : {w}'))
                     d.append(('Version', 'v' + fooocus_version.version))
                     log(x, d)
-
-                if inswapper_enabled and input_image_checkbox:
-                    print("Lets swap some faces!")
-                    imgs = perform_face_swap(imgs, inswapper_source_image, inswapper_target_image_index)
 
                 yield_result(async_task, imgs, do_not_show_finished_images=len(tasks) == 1)
             except ldm_patched.modules.model_management.InterruptProcessingException as e:
