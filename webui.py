@@ -15,6 +15,7 @@ import modules.gradio_hijack as grh
 import modules.advanced_parameters as advanced_parameters
 import modules.style_sorter as style_sorter
 import modules.meta_parser
+import modules.pm as pm
 import args_manager
 import copy
 
@@ -219,9 +220,13 @@ with shared.gradio_root:
                     with gr.TabItem(label="PhotoMaker") as photomaker_tab:
                         with gr.Row():
                             with gr.Column():
-                                photomaker_enabled = gr.Checkbox(label="Enabled", value=False)                                                            
+                                photomaker_enabled = gr.Checkbox(label="Enabled", value=False)
+                                def handle_model(value):
+                                    if value is False:
+                                        pm.unload_model()
+                                photomaker_enabled.change(fn=handle_model, inputs=[photomaker_enabled])
                         with gr.Row():
-                            with gr.Column():                            
+                            with gr.Column():
                                 photomaker_source_image_1 = grh.Image(label='Source Face Image', source='upload', type='numpy')
                             with gr.Column():                                                                
                                 photomaker_source_image_2 = grh.Image(label='Source Face Image', source='upload', type='numpy')

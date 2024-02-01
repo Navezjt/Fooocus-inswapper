@@ -36,6 +36,24 @@ In this fork, PhotoMaker utilizes `🤗 diffusers`, so it does not utilize a lar
 * Sampler (not fully implemented)
 * Scheduler (not fully implemented)
 
+### PhotoMaker LoRA Usage
+
+1. Select the LoRAs you want to use as usual.
+2. Navigate to the PhotoMaker tab.
+3. Click "Enable" then click "Generate"
+
+If you change the LoRAs or their weights:
+
+1. Uncheck "Enabled" to unload the model from memory
+2. Re-check "Enabled" and click "Generate" to reload the LoRAs and the pipeline into memory.
+
+### Supported PhotoMaker samplers
+* euler
+* euler ancestral
+* DPM++ 2M SDE
+* DPM++ 2M SDE Karras
+* Will default to DDIM Scheduler for anything else
+
 ## Issues
 
 Please report any issues in the Issues tab.  I will try to help as much as I can.
