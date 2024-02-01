@@ -62,4 +62,5 @@ Please report any issues in the Issues tab.  I will try to help as much as I can
 
 1. 🚀 Allow changing of insightface parameters (Inswapper)
 2. 🚀 Allow customizable target image (Inswapper)
-3. 🚀 Increase token size to PhotoMaker pipeline to > 77 tokens
+3. 🚀 Increase diffusers pipeline to > 77 tokens (PhotoMaker)
+4. 🚀 Allow dynamic loading of LoRAs into diffusers pipeline (PhotoMaker)
