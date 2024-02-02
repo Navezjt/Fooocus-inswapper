@@ -46,6 +46,8 @@ In this fork, PhotoMaker utilizes `🤗 diffusers`, so it does not utilize a lar
 
 Experiment with also adding an image to the Inswapper tab to overlay the generated image.
 
+**Note: Unchecking "Enable" will unload the PhotoMaker pipeline from memory!**
+
 ### PhotoMaker LoRA Usage
 
 1. Select the LoRAs you want to use as usual.
