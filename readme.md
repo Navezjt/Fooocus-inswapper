@@ -36,6 +36,16 @@ In this fork, PhotoMaker utilizes `🤗 diffusers`, so it does not utilize a lar
 * Sampler (not fully implemented)
 * Scheduler (not fully implemented)
 
+### PhotoMaker General Usage
+
+1. Navigate to the PhotoMaker tab.
+2. Click "Enable"
+3. Load images from your PC.
+4. Enter your prompt and be sure to include "man img" or "woman img" depending on the subject at hand.  **img** in the prompt is expected by PhotoMaker.
+5. Click "Generate"
+
+Experiment with also adding an image to the Inswapper tab to overlay the generated image.
+
 ### PhotoMaker LoRA Usage
 
 1. Select the LoRAs you want to use as usual.
