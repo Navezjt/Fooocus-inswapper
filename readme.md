@@ -3,7 +3,7 @@
 This is a fork of [Fooocus](https://github.com/lllyasviel/Fooocus).  This fork integrates the following:
 
 * Insightface/[inswapper](https://github.com/haofanwang/inswapper) library used by roop, ReActor, and others
-* `🤗 diffusers`-based [PhotoMaker](https://github.com/TencentARC/PhotoMaker)
+* [PhotoMaker](https://github.com/TencentARC/PhotoMaker) based on `🤗 diffusers`
 
 The goal of this repository is to stay up-to-date with the main repository, while also maintaining the above integrations.
 
