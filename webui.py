@@ -569,8 +569,6 @@ with shared.gradio_root:
         ctrls += [inswapper_enabled, inswapper_source_image, inswapper_target_image_index]
         ctrls += [photomaker_enabled, photomaker_source_image_1, photomaker_source_image_2, photomaker_source_image_3, photomaker_source_image_4]
 
-        print(f"Controls: {ctrls}")
-
         state_is_generating = gr.State(False)
 
         def parse_meta(raw_prompt_txt, is_generating):

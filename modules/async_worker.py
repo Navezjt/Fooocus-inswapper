@@ -814,7 +814,6 @@ def worker():
                     imgs = [inpaint_worker.current_task.post_process(x) for x in imgs]
 
                 if inswapper_enabled and input_image_checkbox:
-                    print("Lets swap some faces!")
                     imgs = perform_face_swap(imgs, inswapper_source_image, inswapper_target_image_index)                    
 
                 for x in imgs:

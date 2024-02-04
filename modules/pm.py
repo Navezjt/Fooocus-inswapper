@@ -10,6 +10,7 @@ from huggingface_hub import hf_hub_download
 
 import modules.default_pipeline as pipeline
 import modules.config as config
+import ldm_patched.modules.model_management as model_management
 
 base_model_path = pipeline.model_base.filename
 photomaker_ckpt = hf_hub_download(repo_id="TencentARC/PhotoMaker", filename="photomaker-v1.bin", repo_type="model")
@@ -17,6 +18,13 @@ photomaker_ckpt = hf_hub_download(repo_id="TencentARC/PhotoMaker", filename="pho
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 pipe = None
+
+def interrupt_callback(pipe, i, t, callback_kwargs):
+    interrupt_processing = model_management.interrupt_processing
+    if interrupt_processing:
+        pipe._interrupt =  True
+
+    return callback_kwargs
 
 def load_model(loras, sampler_name, scheduler_name):
     print(f"PhotoMaker: Loading diffusers pipeline into memory.")
@@ -120,7 +128,7 @@ def generate_photomaker(prompt, input_id_images, negative_prompt, steps, seed, w
         generator=generator,
         guidance_scale=guidance_scale,
         callback=progress,
-        # callback_steps=5
+        callback_on_step_end=interrupt_callback
     ).images
 
     return images
