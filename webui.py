@@ -18,6 +18,7 @@ import modules.meta_parser
 import modules.pm as pm
 import args_manager
 import copy
+import PIL.Image as Image
 
 from modules.sdxl_styles import legal_style_names
 from modules.private_logger import get_current_html_path
@@ -227,13 +228,17 @@ with shared.gradio_root:
                                 photomaker_enabled.change(fn=handle_model, inputs=[photomaker_enabled])
                         with gr.Row():
                             with gr.Column():
-                                photomaker_source_image_1 = grh.Image(label='Source Face Image', source='upload', type='numpy')
-                            with gr.Column():                                                                
-                                photomaker_source_image_2 = grh.Image(label='Source Face Image', source='upload', type='numpy')
-                            with gr.Column():                                
-                                photomaker_source_image_3 = grh.Image(label='Source Face Image', source='upload', type='numpy')
-                            with gr.Column():                                
-                                photomaker_source_image_4 = grh.Image(label='Source Face Image', source='upload', type='numpy')                                
+                                def swap_to_gallery(images):
+                                    pil_images = []
+                                    for image in images:
+                                        print(f"image path: {image.name}")
+                                        pil_images.append(Image.open(image.name))                                        
+                                    return gr.update(value=pil_images, visible=True), gr.update(visible=True), gr.update(visible=False)
+
+                                photomaker_images = gr.Files(label="Drag (Select) 1 or more photos of your face", file_types=["image"])
+                                photomaker_gallery_images = gr.Gallery(label="Source Face Images", columns=5, rows=1, height=200)
+                                photomaker_images.upload(fn=swap_to_gallery, inputs=photomaker_images, outputs=[photomaker_gallery_images, photomaker_images])
+
                     # with gr.TabItem(label="InstantID") as instantid_tab:
                     #     with gr.Row():
                     #         with gr.Column():
@@ -567,7 +572,7 @@ with shared.gradio_root:
         ctrls += [outpaint_selections, inpaint_input_image, inpaint_additional_prompt, inpaint_mask_image]
         ctrls += ip_ctrls
         ctrls += [inswapper_enabled, inswapper_source_image, inswapper_target_image_index]
-        ctrls += [photomaker_enabled, photomaker_source_image_1, photomaker_source_image_2, photomaker_source_image_3, photomaker_source_image_4]
+        ctrls += [photomaker_enabled, photomaker_images]
 
         state_is_generating = gr.State(False)
 

@@ -35,6 +35,7 @@ def worker():
     import extras.ip_adapter as ip_adapter
     import extras.face_crop
     import fooocus_version
+    import PIL.Image as Image
 
     from modules.sdxl_styles import apply_style, apply_wildcards, fooocus_expansion
     from modules.private_logger import log
@@ -161,10 +162,7 @@ def worker():
         print(f"Inswapper: {'ENABLED' if inswapper_enabled else 'DISABLED'}")
 
         photomaker_enabled = args.pop()
-        photomaker_source_image_1 = args.pop()
-        photomaker_source_image_2 = args.pop()
-        photomaker_source_image_3 = args.pop()
-        photomaker_source_image_4 = args.pop()
+        photomaker_images = args.pop()
 
         print(f"PhotoMaker: {'ENABLED' if photomaker_enabled else 'DISABLED'}")
 
@@ -770,11 +768,8 @@ def worker():
                                 pipeline.loaded_ControlNets[cn_path], cn_img, cn_weight, 0, cn_stop)
 
                 if current_tab == 'photomaker' and photomaker_enabled == True and input_image_checkbox == True:
-                    print("PhotoMaker: Begin")                    
-                    photomaker_source_images = [photomaker_source_image_1, photomaker_source_image_2, photomaker_source_image_3, photomaker_source_image_4]
-                    photomaker_source_images = [image for image in photomaker_source_images if image is not None]
-
-                    # print(f"Fooocus expansion for PhotoMaker is {'ENABLED' if use_expansion else 'DISABLED'}")
+                    print("PhotoMaker: Begin")
+                    photomaker_source_images = [Image.open(image.name) for image in photomaker_images]
 
                     photomaker_prompt = positive_basic_workloads[0]
                     photomaker_negative_prompt = negative_basic_workloads[0]
