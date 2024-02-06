@@ -29,7 +29,7 @@ https://github.com/machineminded/Fooocus-inswapper/assets/155763297/68f69e95-830
 
 ## PhotoMaker Usage
 
-In this fork, PhotoMaker utilizes `🤗 diffusers`, so it does not utilize a large chunk of Fooocus features (for now).  [Keep in mind that PhotoMaker currently requires 15GB of VRAM!](https://github.com/TencentARC/PhotoMaker?tab=readme-ov-file#-new-featuresupdates) The following Fooocus configuration items are passed to the PhotoMaker `🤗 diffusers` pipeline:
+In this fork, PhotoMaker utilizes `🤗 diffusers`, so it runs outside of the ksampler pipelines.  I'd like to eventually add inpainting and ControlNet for `🤗 diffusers` but it will take some time.  [Keep in mind that PhotoMaker currently requires 15GB of VRAM!](https://github.com/TencentARC/PhotoMaker?tab=readme-ov-file#-new-featuresupdates) The following Fooocus configuration items are passed to the PhotoMaker `🤗 diffusers` pipeline:
 
 * Resolution (width and height)
 * Prompt (and generated prompts from selected styles)
