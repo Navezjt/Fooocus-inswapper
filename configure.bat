@@ -7,7 +7,7 @@ cd ..
 python -m venv venv
 call .\venv\Scripts\activate
 pip install -r requirements_versions.txt
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 xcopy /E /I /Y inswapper\CodeFormer\CodeFormer\basicsr venv\Lib\site-packages\basicsr
 xcopy /E /I /Y inswapper\CodeFormer\CodeFormer\facelib venv\Lib\site-packages\facelib
 mkdir inswapper\checkpoints
