@@ -29,16 +29,16 @@ TRY_INSTALL_XFORMERS = False
 
 
 def prepare_environment():
-    torch_index_url = os.environ.get('TORCH_INDEX_URL', "https://download.pytorch.org/whl/cu121")
-    torch_command = os.environ.get('TORCH_COMMAND',
-                                   f"pip install torch==2.1.0 torchvision==0.16.0 --extra-index-url {torch_index_url}")
-    requirements_file = os.environ.get('REQS_FILE', "requirements_versions.txt")
+    # torch_index_url = os.environ.get('TORCH_INDEX_URL', "https://download.pytorch.org/whl/cu121")
+    # torch_command = os.environ.get('TORCH_COMMAND',
+    #                                f"pip install torch==2.1.0 torchvision==0.16.0 --extra-index-url {torch_index_url}")
+    # requirements_file = os.environ.get('REQS_FILE', "requirements_versions.txt")
 
     print(f"Python {sys.version}")
     print(f"Fooocus version: {fooocus_version.version}")
 
-    if REINSTALL_ALL or not is_installed("torch") or not is_installed("torchvision"):
-        run(f'"{python}" -m {torch_command}', "Installing torch and torchvision", "Couldn't install torch", live=True)
+    # if REINSTALL_ALL or not is_installed("torch") or not is_installed("torchvision"):
+    #     run(f'"{python}" -m {torch_command}', "Installing torch and torchvision", "Couldn't install torch", live=True)
 
     if TRY_INSTALL_XFORMERS:
         if REINSTALL_ALL or not is_installed("xformers"):
@@ -55,8 +55,8 @@ def prepare_environment():
             elif platform.system() == "Linux":
                 run_pip(f"install -U -I --no-deps {xformers_package}", "xformers")
 
-    if REINSTALL_ALL or not requirements_met(requirements_file):
-        run_pip(f"install -r \"{requirements_file}\"", "requirements")
+    # if REINSTALL_ALL or not requirements_met(requirements_file):
+    #     run_pip(f"install -r \"{requirements_file}\"", "requirements")
 
     return
 

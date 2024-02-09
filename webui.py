@@ -16,6 +16,7 @@ import modules.advanced_parameters as advanced_parameters
 import modules.style_sorter as style_sorter
 import modules.meta_parser
 import modules.pm as pm
+import modules.instantid as instantid
 import args_manager
 import copy
 import PIL.Image as Image
@@ -223,7 +224,7 @@ with shared.gradio_root:
                             with gr.Column():
                                 photomaker_enabled = gr.Checkbox(label="Enabled", value=False)
                                 def handle_model(value):
-                                    if value is False:
+                                    if value is False:                                        
                                         pm.unload_model()
                                 photomaker_enabled.change(fn=handle_model, inputs=[photomaker_enabled])
                         with gr.Row():
@@ -239,13 +240,34 @@ with shared.gradio_root:
                                 photomaker_gallery_images = gr.Gallery(label="Source Face Images", columns=5, rows=1, height=200)
                                 photomaker_images.upload(fn=swap_to_gallery, inputs=photomaker_images, outputs=[photomaker_gallery_images, photomaker_images])
 
-                    # with gr.TabItem(label="InstantID") as instantid_tab:
-                    #     with gr.Row():
-                    #         with gr.Column():
-                    #             instantid_enabled = gr.Checkbox(label="Enabled", value=False)                                                            
-                    #     with gr.Row():
-                    #         with gr.Column():                            
-                    #             instantid_source_image = grh.Image(label='Source Face Image', source='upload', type='numpy')
+                    with gr.TabItem(label="InstantID") as instantid_tab:
+                        with gr.Row():
+                            with gr.Column():
+                                instantid_enabled = gr.Checkbox(label="Enabled", value=False)
+                                def handle_model(value):
+                                    if value is False:
+                                        instantid.unload_model()
+                                instantid_enabled.change(fn=handle_model, inputs=[instantid_enabled])
+                            with gr.Column():
+                                instantid_identitynet_strength_ratio = gr.Slider(
+                                    label="IdentityNet strength (for fidelity)",
+                                    minimum=0,
+                                    maximum=1.5,
+                                    step=0.05,
+                                    value=0.80,
+                                )
+                                instantid_adapter_strength_ratio = gr.Slider(
+                                    label="Image adapter strength (for detail)",
+                                    minimum=0,
+                                    maximum=1.5,
+                                    step=0.05,
+                                    value=0.80,
+                                )                                
+                        with gr.Row():
+                            with gr.Column():                            
+                                instantid_source_image_path = grh.Image(label='Source Face Image', source='upload', type='filepath')
+                            with gr.Column():
+                                instantid_pose_image_path = grh.Image(label='Source Pose Image', source='upload', type='filepath')
 
             switch_js = "(x) => {if(x){viewer_to_bottom(100);viewer_to_bottom(500);}else{viewer_to_top();} return x;}"
             down_js = "() => {viewer_to_bottom();}"
@@ -261,7 +283,7 @@ with shared.gradio_root:
             desc_tab.select(lambda: 'desc', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
             inswapper_tab.select(lambda: 'inswapper', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
             photomaker_tab.select(lambda: 'photomaker', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
-            # instantid_tab.select(lambda: 'instantid', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
+            instantid_tab.select(lambda: 'instantid', outputs=current_tab, queue=False, _js=down_js, show_progress=False)
 
         with gr.Column(scale=1, visible=modules.config.default_advanced_checkbox) as advanced_column:
             with gr.Tab(label='Setting'):
@@ -573,6 +595,7 @@ with shared.gradio_root:
         ctrls += ip_ctrls
         ctrls += [inswapper_enabled, inswapper_source_image, inswapper_target_image_index]
         ctrls += [photomaker_enabled, photomaker_images]
+        ctrls += [instantid_enabled, instantid_source_image_path, instantid_pose_image_path, instantid_identitynet_strength_ratio, instantid_adapter_strength_ratio]
 
         state_is_generating = gr.State(False)
 

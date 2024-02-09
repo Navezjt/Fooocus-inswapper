@@ -46,6 +46,7 @@ def worker():
 
     from modules.face_swap import perform_face_swap
     from modules.pm import generate_photomaker
+    from modules.instantid import generate_instantid
 
 
     try:
@@ -165,6 +166,14 @@ def worker():
         photomaker_images = args.pop()
 
         print(f"PhotoMaker: {'ENABLED' if photomaker_enabled else 'DISABLED'}")
+
+        instantid_enabled = args.pop()
+        instantid_image_path = args.pop()
+        instantid_pose_image_path = args.pop()
+        instantid_identitynet_strength_ratio = args.pop()
+        instantid_adapter_strength_ratio = args.pop()
+
+        print(f"InstantID: {'ENABLED' if instantid_enabled else 'DISABLED'}")
 
         outpaint_selections = [o.lower() for o in outpaint_selections]
         base_model_additional_loras = []
@@ -767,7 +776,7 @@ def worker():
                                 positive_cond, negative_cond,
                                 pipeline.loaded_ControlNets[cn_path], cn_img, cn_weight, 0, cn_stop)
 
-                if current_tab == 'photomaker' and photomaker_enabled == True and input_image_checkbox == True:
+                elif current_tab == 'photomaker' and photomaker_enabled == True and input_image_checkbox == True:
                     print("PhotoMaker: Begin")
                     photomaker_source_images = [Image.open(image.name) for image in photomaker_images]
 
@@ -783,6 +792,22 @@ def worker():
                     print(f"PhotoMaker: Negative prompt: {photomaker_negative_prompt}")
 
                     imgs = generate_photomaker(photomaker_prompt, photomaker_source_images, photomaker_negative_prompt, steps, task['task_seed'], width, height, guidance_scale, loras, sampler_name, scheduler_name, async_task)
+
+                elif current_tab == 'instantid' and instantid_enabled == True and input_image_checkbox == True:
+                    print("InstantID: Begin")
+
+                    instantid_prompt = positive_basic_workloads[0]
+                    instantid_negative_prompt = negative_basic_workloads[0]
+
+                    # TODO: figure out 77 token limit
+                    # https://github.com/huggingface/diffusers/issues/2136#issuecomment-1514969011                    
+                    # if use_expansion:
+                    #     photomaker_prompt = photomaker_prompt + ' ' +  expansion.replace(prompt, "")
+                    
+                    print(f"InstantID: Positive prompt: {instantid_prompt}")
+                    print(f"InstantID: Negative prompt: {instantid_negative_prompt}")
+
+                    imgs = generate_instantid(instantid_image_path, instantid_pose_image_path, instantid_prompt, instantid_negative_prompt, steps, task['task_seed'], width, height, guidance_scale, loras, sampler_name, scheduler_name, async_task, instantid_identitynet_strength_ratio, instantid_adapter_strength_ratio)
 
                 else:
                     imgs = pipeline.process_diffusion(

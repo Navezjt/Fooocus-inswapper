@@ -13,19 +13,15 @@ git clone https://huggingface.co/spaces/sczhou/CodeFormer
 # Move back to the parent directory
 cd ..
 
-# Create a virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
 # Install Python dependencies
 pip install -r requirements_versions.txt
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 # Copy directories
 echo "Copying basicsr"
-cp -r inswapper/CodeFormer/CodeFormer/basicsr venv/lib/site-packages/
+cp -r inswapper/CodeFormer/CodeFormer/basicsr /usr/local/lib/python*/dist-packages
 echo "Copying facelib"
-cp -r inswapper/CodeFormer/CodeFormer/facelib venv/lib/site-packages/
+cp -r inswapper/CodeFormer/CodeFormer/facelib /usr/local/lib/python*/dist-packages
 
 # Create a directory for checkpoints
 mkdir -p inswapper/checkpoints

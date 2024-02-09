@@ -52,7 +52,7 @@ def load_model(loras, sampler_name, scheduler_name):
     print(f"PhotoMaker: sampler from Fooocus {sampler_name}")    
     print(f"PhotoMaker: scheduler from Fooocus {scheduler_name}")  
     sampler_name = get_sampler(sampler_name, scheduler_name)
-    pipe.scheduler = sampler_name.from_config(pipe.scheduler.config)    
+    pipe.scheduler = sampler_name.from_config(pipe.scheduler.config)
 
     loras = [lora for lora in loras if 'None' not in lora]
 
@@ -72,7 +72,7 @@ def load_model(loras, sampler_name, scheduler_name):
     adapter_weights = [list(adapter.values())[0] for adapter in adapters]
     pipe.set_adapters(adapter_names, adapter_weights=adapter_weights)
 
-    pipe.fuse_lora()    
+    pipe.fuse_lora()
 
     return pipe
 
