@@ -635,8 +635,8 @@ with shared.gradio_root:
             .then(advanced_parameters.set_all_advanced_parameters, inputs=adps) \
             .then(fn=generate_clicked, inputs=ctrls, outputs=[progress_html, progress_window, progress_gallery, gallery]) \
             .then(lambda: (gr.update(visible=True, interactive=True), gr.update(visible=False, interactive=False), gr.update(visible=False, interactive=False), False),
-                  outputs=[generate_button, stop_button, skip_button, state_is_generating]).then(fn=lambda: None, _js='playNotification').then(fn=lambda: None, _js='refresh_grid_delayed')            
-            .then(fn=update_history_link, outputs=history_link) \
+                  outputs=[generate_button, stop_button, skip_button, state_is_generating]).then(fn=lambda: None, _js='playNotification').then(fn=lambda: None, _js='refresh_grid_delayed') \
+            .then(fn=update_history_link, outputs=history_link)
 
         for notification_file in ['notification.ogg', 'notification.mp3']:
             if os.path.exists(notification_file):
