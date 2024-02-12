@@ -765,6 +765,7 @@ def worker():
 
             try:
                 positive_cond, negative_cond = task['c'], task['uc']
+                imgs = []
 
                 if 'cn' in goals:
                     for cn_flag, cn_path in [
@@ -776,7 +777,7 @@ def worker():
                                 positive_cond, negative_cond,
                                 pipeline.loaded_ControlNets[cn_path], cn_img, cn_weight, 0, cn_stop)
 
-                elif current_tab == 'photomaker' and photomaker_enabled == True and input_image_checkbox == True:
+                if current_tab == 'photomaker' and photomaker_enabled == True and input_image_checkbox == True:
                     print("PhotoMaker: Begin")
                     photomaker_source_images = [Image.open(image.name) for image in photomaker_images]
 

@@ -20,6 +20,7 @@ import PIL
 from PIL import Image
 
 from modules.crop_and_resize import crop_and_resize
+from .fooocus_to_diffusers_sampler_mapping import get_scheduler
 
 base_model_path = pipeline.model_base.filename
 
@@ -31,13 +32,14 @@ app = None
 # prepare models under ./checkpoints
 face_adapter = f'InstantID/checkpoints/ip-adapter.bin'
 controlnet_path = f'InstantID/checkpoints/ControlNetModel'
+lcm_lora_path = f'{config.path_loras}/sdxl_lcm_lora.safetensors'
 
 from huggingface_hub import hf_hub_download
 hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/config.json", local_dir="InstantID/checkpoints")
 hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/diffusion_pytorch_model.safetensors", local_dir="InstantID/checkpoints")
 hf_hub_download(repo_id="InstantX/InstantID", filename="ip-adapter.bin", local_dir="InstantID/checkpoints")
 
-def load_model(loras):
+def load_model(loras, scheduler_name):
   print(f"InstantID: Loading diffusers pipeline into memory.")
   global pipe
   global controlnet
@@ -55,7 +57,7 @@ def load_model(loras):
       base_model_path,
       controlnet=controlnet,
       torch_dtype=torch.float16
-  )
+  )  
   pipe.cuda()
   pipe.load_ip_adapter_instantid(face_adapter)
 
@@ -73,6 +75,10 @@ def load_model(loras):
       except ValueError:
           print(f"InstantID: {lora_filename} already loaded, continuing on...")
   
+  if scheduler_name == 'lcm':
+    pipe.load_lora_weights(lcm_lora_path)
+    adapters.append({'lcm': 1.0})
+
   adapter_names = [list(adapter.keys())[0] for adapter in adapters]
   adapter_weights = [list(adapter.values())[0] for adapter in adapters]
   pipe.set_adapters(adapter_names, adapter_weights=adapter_weights)
@@ -134,7 +140,7 @@ def generate_instantid(instantid_image_path, instantid_pose_image_path, prompt, 
   global app
 
   if pipe is None:
-    pipe = load_model(loras)
+    pipe = load_model(loras, scheduler_name)
 
     # load an image
   face_image = load_image(instantid_image_path)
@@ -187,6 +193,9 @@ def generate_instantid(instantid_image_path, instantid_pose_image_path, prompt, 
 
   control_mask = enhance_face_region(instantid_image_width, instantid_image_height, face_info)
 
+  scheduler = get_scheduler(sampler_name, scheduler_name)
+  pipe.scheduler = scheduler
+
   images = pipe(
     image_embeds=face_emb,
     image=face_kps,
@@ -213,3 +222,5 @@ def enhance_face_region(width, height, face_info):
   x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
   control_mask[y1:y2, x1:x2] = 255
   control_mask = Image.fromarray(control_mask.astype(np.uint8))
+
+### InstantID Inpainting
