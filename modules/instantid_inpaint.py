@@ -1,3 +1,7 @@
+# written by nosiu
+# https://github.com/nosiu
+# https://github.com/nosiu/comfyui-instantId-faceswap/blob/main/node.py
+
 from diffusers.models import ControlNetModel
 from diffusers import LCMScheduler
 from PIL import Image, ImageFilter

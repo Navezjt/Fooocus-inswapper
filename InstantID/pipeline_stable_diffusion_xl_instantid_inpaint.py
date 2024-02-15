@@ -1,3 +1,5 @@
+# taken from https://github.com/nosiu/comfyui-instantId-faceswap/blob/main/pipeline_stable_diffusion_xl_instantid_inpaint.py
+
 # based on https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/controlnet/pipeline_controlnet_inpaint_sd_xl.py
 
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
