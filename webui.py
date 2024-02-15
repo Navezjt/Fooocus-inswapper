@@ -267,7 +267,7 @@ with shared.gradio_root:
                             with gr.Column():                            
                                 instantid_source_image_path = grh.Image(label='Source Face Image', source='upload', type='filepath')
                             with gr.Column():
-                                instantid_pose_image_path = grh.Image(label='Source Pose Image', source='upload', type='filepath', tool='sketch', brush_color="#FFFFFF", elem_id='inpaint_canvas')
+                                instantid_pose_image_path = grh.Image(label='Source Pose Image', source='upload', type='pil', tool='sketch', brush_color="#FFFFFF", elem_id='instantid_inpaint_canvas')
 
             switch_js = "(x) => {if(x){viewer_to_bottom(100);viewer_to_bottom(500);}else{viewer_to_top();} return x;}"
             down_js = "() => {viewer_to_bottom();}"

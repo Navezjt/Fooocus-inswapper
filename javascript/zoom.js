@@ -642,4 +642,5 @@ onUiLoaded(async() => {
     }
 
     applyZoomAndPan("#inpaint_canvas");
+    applyZoomAndPan("#instantid_inpaint_canvas")
 });

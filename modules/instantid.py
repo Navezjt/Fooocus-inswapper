@@ -39,7 +39,7 @@ hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/config.j
 hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/diffusion_pytorch_model.safetensors", local_dir="InstantID/checkpoints")
 hf_hub_download(repo_id="InstantX/InstantID", filename="ip-adapter.bin", local_dir="InstantID/checkpoints")
 
-def load_model(loras, scheduler_name):
+def load_model(loras, sampler_name):
   print(f"InstantID: Loading diffusers pipeline into memory.")
   global pipe
   global controlnet
@@ -75,9 +75,10 @@ def load_model(loras, scheduler_name):
       except ValueError:
           print(f"InstantID: {lora_filename} already loaded, continuing on...")
   
-  if scheduler_name == 'lcm':
-    pipe.load_lora_weights(lcm_lora_path)
-    adapters.append({'lcm': 1.0})
+  # if sampler_name == 'lcm':
+  #   print("InstantID: Loading LCM weights")
+  #   pipe.load_lora_weights(lcm_lora_path)
+  #   adapters.append({'lcm': 1.0})
 
   adapter_names = [list(adapter.keys())[0] for adapter in adapters]
   adapter_weights = [list(adapter.values())[0] for adapter in adapters]
@@ -140,7 +141,7 @@ def generate_instantid(instantid_image_path, instantid_pose_image_path, prompt, 
   global app
 
   if pipe is None:
-    pipe = load_model(loras, scheduler_name)
+    pipe = load_model(loras, sampler_name)
 
     # load an image
   face_image = load_image(instantid_image_path)
@@ -155,7 +156,9 @@ def generate_instantid(instantid_image_path, instantid_pose_image_path, prompt, 
   instantid_image_height, instantid_image_width, _ = face_image_cv2.shape
 
   if instantid_pose_image_path is not None:
-      pose_image = load_image(instantid_pose_image_path)
+      # inpaint_input_image['image']
+      # pose_image = load_image(instantid_pose_image_path)
+      pose_image = instantid_pose_image_path['image']
       pose_image = crop_and_resize(instantid_pose_image_path, (width, height))
       # pose_image = resize_img(pose_image)
       pose_image_cv2 = convert_from_image_to_cv2(pose_image)
@@ -193,8 +196,10 @@ def generate_instantid(instantid_image_path, instantid_pose_image_path, prompt, 
 
   control_mask = enhance_face_region(instantid_image_width, instantid_image_height, face_info)
 
-  scheduler = get_scheduler(sampler_name, scheduler_name)
-  pipe.scheduler = scheduler
+  # scheduler = get_scheduler(sampler_name, scheduler_name)
+  # print(f"InstantID: Fooocus sampler: {sampler_name}")
+  # print(f"InstantID: Fooocus scheduler: {scheduler_name}")
+  # pipe.scheduler = scheduler
 
   images = pipe(
     image_embeds=face_emb,

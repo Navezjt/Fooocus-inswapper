@@ -1,8 +1,10 @@
 from PIL import Image
 
-def crop_and_resize(input_image_path, target_resolution):
+def crop_and_resize(input_image, target_resolution):
+    
     # Open the input image
-    input_image = Image.open(input_image_path)
+    # input_image = Image.open(input_image)
+    input_image = input_image['image']
 
     # Get the size of the input image
     input_width, input_height = input_image.size
