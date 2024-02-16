@@ -17,4 +17,5 @@ mkdir InstantID\models
 mkdir InstantID\models\antelopev2
 powershell -Command "& { Invoke-WebRequest -Uri 'https://keeper.mpdl.mpg.de/f/2d58b7fed5a74cb5be83/?dl=1' -OutFile '.\InstantID\models\antelopev2.zip' }"
 
-expand -F:* ".\InstantID\models\antelopev2.zip" ".\InstantID\models\antelopev2"
+powershell -Command "Expand-Archive .\InstantID\models\antelopev2.zip .\InstantID\models\antelopev2"
+powershell -Command "Remove-Item .\InstantID\models\antelopev2.zip"
