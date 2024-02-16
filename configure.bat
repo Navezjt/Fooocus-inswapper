@@ -15,6 +15,6 @@ powershell -Command "& { Invoke-WebRequest -Uri 'https://github.com/facefusion/f
 
 mkdir InstantID\models
 mkdir InstantID\models\antelopev2
-powershell -Command "& { Invoke-WebRequest -Uri 'https://drive.google.com/file/d/18wEUfMNohBJ4K3Ly5wpTejPfDzp-8fI8/view?usp=sharing' -OutFile '.\InstantID\models\antelopev2.zip' }"
+powershell -Command "& { Invoke-WebRequest -Uri 'https://keeper.mpdl.mpg.de/f/2d58b7fed5a74cb5be83/?dl=1' -OutFile '.\InstantID\models\antelopev2.zip' }"
 
 expand -F:* ".\InstantID\models\antelopev2.zip" ".\InstantID\models\antelopev2"
