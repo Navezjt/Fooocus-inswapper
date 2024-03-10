@@ -43,7 +43,6 @@ def perform_face_swap(images, inswapper_source_image, inswapper_target_image_ind
                                       upsampler,
                                       codeformer_net,
                                       device)
-      result_image = Image.fromarray(result_image)
 
       swapped_images.append(result_image)
   
