@@ -32,7 +32,7 @@ app = None
 # prepare models under ./checkpoints
 face_adapter = f'InstantID/checkpoints/ip-adapter.bin'
 controlnet_path = f'InstantID/checkpoints/ControlNetModel'
-lcm_lora_path = f'{config.path_loras}/sdxl_lcm_lora.safetensors'
+lcm_lora_path = f'{config.paths_loras}/sdxl_lcm_lora.safetensors'
 
 from huggingface_hub import hf_hub_download
 hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/config.json", local_dir="InstantID/checkpoints")
@@ -67,10 +67,10 @@ def load_model(loras, sampler_name):
   for index, lora in enumerate(loras):
       path_separator = os.path.sep
       lora_filename, lora_weight = lora
-      lora_fullpath = config.path_loras + path_separator + lora_filename
+      lora_fullpath = config.paths_loras + path_separator + lora_filename
       print(f"InstantID: Loading {lora_fullpath} with weight {lora_weight}")
       try:
-          pipe.load_lora_weights(config.path_loras, weight_name=lora_filename, adapter_name=str(index))
+          pipe.load_lora_weights(config.paths_loras, weight_name=lora_filename, adapter_name=str(index))
           adapters.append({str(index): lora_weight})
       except ValueError:
           print(f"InstantID: {lora_filename} already loaded, continuing on...")
