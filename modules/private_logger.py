@@ -27,11 +27,12 @@ def log(image, metadata, metadata_parser: MetadataParser | None = None, output_f
     date_string, local_temp_filename, only_name = generate_temp_filename(folder=path_outputs, extension=output_format)
     os.makedirs(os.path.dirname(local_temp_filename), exist_ok=True)
 
-    image = Image.fromarray(image)
-    parsed_parameters = metadata_parser.parse_string(metadata.copy()) if metadata_parser is not None else ''
+    print(f"image type: {type(image)}")
 
-    # if isinstance (image, Image.Image):
-    #     image.save(local_temp_filename)
+    if not isinstance(image, Image.Image):
+        image = Image.fromarray(image)
+
+    parsed_parameters = metadata_parser.parse_string(metadata.copy()) if metadata_parser is not None else ''
 
     if output_format == 'png':
         if parsed_parameters != '':
