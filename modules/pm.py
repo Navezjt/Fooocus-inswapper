@@ -60,10 +60,10 @@ def load_model(loras, sampler_name, scheduler_name):
     for index, lora in enumerate(loras):
         path_separator = os.path.sep
         lora_filename, lora_weight = lora
-        lora_fullpath = config.path_loras + path_separator + lora_filename
+        lora_fullpath = config.paths_loras[0] + path_separator + lora_filename
         print(f"PhotoMaker: Loading {lora_fullpath} with weight {lora_weight}")
         try:
-            pipe.load_lora_weights(config.path_loras, weight_name=lora_filename, adapter_name=str(index))
+            pipe.load_lora_weights(config.paths_loras[0], weight_name=lora_filename, adapter_name=str(index))
             adapters.append({str(index): lora_weight})
         except ValueError:
             print(f"PhotoMaker: {lora_filename} already loaded, continuing on...")
