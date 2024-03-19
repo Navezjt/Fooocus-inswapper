@@ -1,5 +1,4 @@
 @echo off
-git clone https://github.com/haofanwang/inswapper.git
 cd inswapper
 git lfs install
 git clone https://huggingface.co/spaces/sczhou/CodeFormer

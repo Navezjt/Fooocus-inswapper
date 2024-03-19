@@ -54,6 +54,6 @@ user_path_config-deprecated.txt
 .DS_Store
 
 # Fooocus-inswapper
-inswapper
 checkpoints
+inswapper\checkpoints
 *.orig
