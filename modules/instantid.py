@@ -35,9 +35,14 @@ controlnet_path = f'InstantID/checkpoints/ControlNetModel'
 lcm_lora_path = f'{config.paths_loras[0]}/sdxl_lcm_lora.safetensors'
 
 from huggingface_hub import hf_hub_download
-hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/config.json", local_dir="InstantID/checkpoints")
-hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/diffusion_pytorch_model.safetensors", local_dir="InstantID/checkpoints")
-hf_hub_download(repo_id="InstantX/InstantID", filename="ip-adapter.bin", local_dir="InstantID/checkpoints")
+
+try:
+  hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/config.json", local_dir="InstantID/checkpoints")
+  hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/diffusion_pytorch_model.safetensors", local_dir="InstantID/checkpoints")
+  hf_hub_download(repo_id="InstantX/InstantID", filename="ip-adapter.bin", local_dir="InstantID/checkpoints")
+except Exception as e:
+  print("There was an issue getting some files for instantid... continuing on")
+  pass
 
 def load_model(loras, sampler_name):
   print(f"InstantID: Loading diffusers pipeline into memory.")

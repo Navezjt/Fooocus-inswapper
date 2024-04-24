@@ -30,6 +30,7 @@ tb-nightly
 yapf
 lpips
 insightface>=0.7.3
+facexlib==0.3.0
 
 # photomaker
 diffusers==0.26.1
