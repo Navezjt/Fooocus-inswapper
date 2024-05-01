@@ -28,7 +28,7 @@ Inswapper will activate if "Input Image" and "Enabled" are both checked.
 1. `.\venv\Scripts\activate`
 2. `python launch.py`
 
-https://github.com/machineminded/Fooocus-inswapper/assets/155763297/68f69e95-8306-4c7b-8f9b-0013352460b6
+https://github.com/machineminded/Fooocus-inswapper/assets/155763297/04d325fc-f629-47d9-bda1-e29bec4844b8
 
 ## PhotoMaker Usage
 
