@@ -23,10 +23,9 @@ The installation assumes CUDA 11.8.  If you need a different version, please upd
 
 ## Inswapper Usage
 
-Inswapper will activate if "Input Image" and "Enabled" are both checked.
+Inswapper will activate if "Enabled" is checked.
 
-1. `.\venv\Scripts\activate`
-2. `python launch.py`
+Execute `run.bat` if you're on Windows, or `run.sh` if you're on a Linux-based OS.
 
 https://github.com/machineminded/Fooocus-inswapper/assets/155763297/04d325fc-f629-47d9-bda1-e29bec4844b8
 
