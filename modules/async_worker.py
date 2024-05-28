@@ -86,6 +86,10 @@ def worker():
             progressbar(async_task, progressbar_index, 'Checking for NSFW content ...')
             imgs = default_censor(imgs)
 
+        if censor and (modules.config.default_black_out_nsfw or black_out_nsfw):
+            progressbar(async_task, progressbar_index, 'Checking for NSFW content ...')
+            imgs = default_censor(imgs)
+
         async_task.results = async_task.results + imgs
 
         if do_not_show_finished_images:

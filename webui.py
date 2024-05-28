@@ -226,6 +226,7 @@ with shared.gradio_root:
                                     value=flags.desc_type_photo)
                                 desc_btn = gr.Button(value='Describe this Image into Prompt')
                                 desc_image_size = gr.Textbox(label='Image Size and Recommended Size', elem_id='desc_image_size', visible=False)
+                                desc_image_size = gr.Textbox(label='Image Size and Recommended Size', elem_id='desc_image_size', visible=False)
                                 gr.HTML('<a href="https://github.com/lllyasviel/Fooocus/discussions/1363" target="_blank">\U0001F4D4 Document</a>')
                                 def trigger_show_image_properties(image):
                                     value = modules.util.get_image_size_info(image, modules.flags.sdxl_aspect_ratios)
@@ -804,15 +805,7 @@ with shared.gradio_root:
                                     reset_button, stop_button, skip_button,
                                     progress_html, progress_window, progress_gallery, gallery],
                            queue=False)
-
-        reset_button.click(lambda: [worker.AsyncTask(args=[]), False, gr.update(visible=True, interactive=True)] +
-                                   [gr.update(visible=False)] * 6 +
-                                   [gr.update(visible=True, value=[])],
-                           outputs=[currentTask, state_is_generating, generate_button,
-                                    reset_button, stop_button, skip_button,
-                                    progress_html, progress_window, progress_gallery, gallery],
-                           queue=False)
-
+        
         for notification_file in ['notification.ogg', 'notification.mp3']:
             if os.path.exists(notification_file):
                 gr.Audio(interactive=False, value=notification_file, elem_id='audio_notification', visible=False)
