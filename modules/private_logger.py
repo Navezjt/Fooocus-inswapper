@@ -33,7 +33,7 @@ def log(image, metadata, metadata_parser: MetadataParser | None = None, output_f
     if not isinstance(image, Image.Image):
         image = Image.fromarray(image)
 
-    parsed_parameters = metadata_parser.parse_string(metadata.copy()) if metadata_parser is not None else ''
+    parsed_parameters = metadata_parser.to_string(metadata.copy()) if metadata_parser is not None else ''
 
     if output_format == OutputFormat.PNG.value:
         if parsed_parameters != '':

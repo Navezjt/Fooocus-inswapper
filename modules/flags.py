@@ -8,9 +8,15 @@ upscale_15 = 'Upscale (1.5x)'
 upscale_2 = 'Upscale (2x)'
 upscale_fast = 'Upscale (Fast 2x)'
 
-uov_list = [
-    disabled, subtle_variation, strong_variation, upscale_15, upscale_2, upscale_fast
-]
+uov_list = [disabled, subtle_variation, strong_variation, upscale_15, upscale_2, upscale_fast]
+
+enhancement_uov_before = "Before First Enhancement"
+enhancement_uov_after = "After Last Enhancement"
+enhancement_uov_processing_order = [enhancement_uov_before, enhancement_uov_after]
+
+enhancement_uov_prompt_type_original = 'Original Prompts'
+enhancement_uov_prompt_type_last_filled = 'Last Filled Enhancement Prompts'
+enhancement_uov_prompt_types = [enhancement_uov_prompt_type_original, enhancement_uov_prompt_type_last_filled]
 
 CIVITAI_NO_KARRAS = ["euler", "euler_ancestral", "heun", "dpm_fast", "dpm_adaptive", "ddim", "uni_pc"]
 
@@ -35,7 +41,8 @@ KSAMPLER = {
     "dpmpp_3m_sde_gpu": "",
     "ddpm": "",
     "lcm": "LCM",
-    "tcd": "TCD"
+    "tcd": "TCD",
+    "restart": "Restart"
 }
 
 SAMPLER_EXTRA = {
@@ -48,7 +55,7 @@ SAMPLERS = KSAMPLER | SAMPLER_EXTRA
 
 KSAMPLER_NAMES = list(KSAMPLER.keys())
 
-SCHEDULER_NAMES = ["normal", "karras", "exponential", "sgm_uniform", "simple", "ddim_uniform", "lcm", "turbo", "align_your_steps", "tcd"]
+SCHEDULER_NAMES = ["normal", "karras", "exponential", "sgm_uniform", "simple", "ddim_uniform", "lcm", "turbo", "align_your_steps", "tcd", "edm_playground_v2.5"]
 SAMPLER_NAMES = KSAMPLER_NAMES + list(SAMPLER_EXTRA.keys())
 
 sampler_list = SAMPLER_NAMES
@@ -74,6 +81,10 @@ default_parameters = {
 
 output_formats = ['png', 'jpeg', 'webp']
 
+inpaint_mask_models = ['u2net', 'u2netp', 'u2net_human_seg', 'u2net_cloth_seg', 'silueta', 'isnet-general-use', 'isnet-anime', 'sam']
+inpaint_mask_cloth_category = ['full', 'upper', 'lower']
+inpaint_mask_sam_model = ['vit_b', 'vit_l', 'vit_h']
+
 inpaint_engine_versions = ['None', 'v1', 'v2.5', 'v2.6']
 inpaint_option_default = 'Inpaint or Outpaint (default)'
 inpaint_option_detail = 'Improve Detail (face, hand, eyes, etc.)'
@@ -91,6 +102,7 @@ sdxl_aspect_ratios = [
     '1664*576', '1728*576'
 ]
 
+
 class MetadataScheme(Enum):
     FOOOCUS = 'fooocus'
     A1111 = 'a1111'
@@ -102,7 +114,6 @@ metadata_scheme = [
 ]
 
 controlnet_image_count = 4
-preparation_step_count = 13
 
 
 class OutputFormat(Enum):
@@ -115,12 +126,24 @@ class OutputFormat(Enum):
         return list(map(lambda c: c.value, cls))
 
 
+class PerformanceLoRA(Enum):
+    QUALITY = None
+    SPEED = None
+    EXTREME_SPEED = 'sdxl_lcm_lora.safetensors'
+    LIGHTNING = 'sdxl_lightning_4step_lora.safetensors'
+    HYPER_SD = 'sdxl_hyper_sd_4step_lora.safetensors'
+
+
 class Steps(IntEnum):
     QUALITY = 60
     SPEED = 30
     EXTREME_SPEED = 8
     LIGHTNING = 4
     HYPER_SD = 4
+
+    @classmethod
+    def keys(cls) -> list:
+        return list(map(lambda c: c, Steps.__members__))
 
 
 class StepsUOV(IntEnum):
@@ -140,7 +163,15 @@ class Performance(Enum):
 
     @classmethod
     def list(cls) -> list:
+        return list(map(lambda c: (c.name, c.value), cls))
+
+    @classmethod
+    def values(cls) -> list:
         return list(map(lambda c: c.value, cls))
+
+    @classmethod
+    def by_steps(cls, steps: int | str):
+        return cls[Steps(int(steps)).name]
 
     @classmethod
     def has_restricted_features(cls, x) -> bool:
@@ -149,7 +180,10 @@ class Performance(Enum):
         return x in [cls.EXTREME_SPEED.value, cls.LIGHTNING.value, cls.HYPER_SD.value]
 
     def steps(self) -> int | None:
-        return Steps[self.name].value if Steps[self.name] else None
+        return Steps[self.name].value if self.name in Steps.__members__ else None
 
     def steps_uov(self) -> int | None:
-        return StepsUOV[self.name].value if Steps[self.name] else None
+        return StepsUOV[self.name].value if self.name in StepsUOV.__members__ else None
+
+    def lora_filename(self) -> str | None:
+        return PerformanceLoRA[self.name].value if self.name in PerformanceLoRA.__members__ else None
